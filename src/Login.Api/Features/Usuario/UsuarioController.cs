@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using FluentValidation;
 using Login.Api.Features.Usuario.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +23,9 @@ namespace Login.Api.Features.Usuario
 
         [HttpPost("inserir")]
         [AllowAnonymous]
-        public async Task<ActionResult> InserirUsuarioAsync([FromBody] UsuarioCreate usuarioCreate)
+        public async Task<ActionResult> InserirUsuarioAsync([FromBody] UsuarioCreate usuarioCreate, IValidator<UsuarioCreate> validator)
         {
+
 
             UsuarioModel usuarioModel = new(usuarioCreate.CdUsuario, usuarioCreate.NmUsuario, usuarioCreate.DsEmail, usuarioCreate.DsSenha);
 

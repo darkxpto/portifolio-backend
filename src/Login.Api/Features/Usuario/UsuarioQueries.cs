@@ -15,7 +15,8 @@ namespace Login.Api.Features.Usuario
         public static string ObterPraInsercao(string cdUsuario)
         {
             return @"
-                SELECT * 
+                SELECT cd_usuario cdUsuario, nm_usuario nmUsuario,
+                       ds_email dsEmail,     ds_senha dsSenha
                 FROM usuarios 
                 WHERE cd_usuario = @CdUsuario";
         }

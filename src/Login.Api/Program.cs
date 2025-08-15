@@ -1,5 +1,7 @@
 using System.Data;
 using System.Text;
+using FluentValidation;
+using Login.Api.Common;
 using Login.Api.Features.Usuario;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.Sqlite;
@@ -9,7 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>(); // Adiciona o filtro global
+});
+
+// Registra todos os Validators do seu assembly
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -19,7 +29,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddScoped<IDbConnection>(sp => new SqliteConnection(connectionString));
 
 //Autenticação
-var key = Encoding.ASCII.GetBytes(builder.Configuration["AppSettings:Secret"]);
+var key = Encoding.ASCII.GetBytes(builder.Configuration["AppSettings:Secret"] ?? "");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
