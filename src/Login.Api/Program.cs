@@ -24,11 +24,11 @@ builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Buscar string de conexão e conectar no banco
+// Buscar string de conexï¿½o e conectar no banco
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddScoped<IDbConnection>(sp => new SqliteConnection(connectionString));
 
-//Autenticação
+//AutenticaÃ§Ã£o
 var key = Encoding.ASCII.GetBytes(builder.Configuration["AppSettings:Secret"] ?? "");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -45,12 +45,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidAudience = builder.Configuration["AppSettings:Audience"],
             ValidateLifetime = true,
-            // ClockSkew = TimeSpan.Zero // Expiração exata
+            // ClockSkew = TimeSpan.Zero // Expiraï¿½ï¿½o exata
             ClockSkew = TimeSpan.FromMinutes(2)
         };
     });
 
-//Injeções de dependencia
+//Injeï¿½ï¿½es de dependencia
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
 
