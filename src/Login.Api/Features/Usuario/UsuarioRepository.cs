@@ -20,7 +20,7 @@ namespace Login.Api.Features.Usuario
             try
             {
                 //Verificar a existencia do usuário
-                string query = UsuarioQueries.ObterPraInsercao(usuarioModel.CdUsuario);
+                string query = UsuarioQueries.ObterUsuarioPorId();
                 var usuario = await _con.QueryFirstOrDefaultAsync<UsuarioModel>(
                     query,
                     new { CdUsuario = usuarioModel.CdUsuario }
@@ -29,14 +29,40 @@ namespace Login.Api.Features.Usuario
                 if (usuario != null)
                     return "Usuário já existe";
 
-                //preencher datas
-                usuarioModel.DtCadastro = DateTime.Now;
-                usuarioModel.DtAtualizacao = DateTime.Now;
 
                 //Inserir
-                query = UsuarioQueries.InserirUsuario(usuarioModel);
+                query = UsuarioQueries.InserirUsuario();
 
                 await _con.ExecuteAsync(query, usuarioModel);
+                return erro;
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        public async Task<string?> AlterarUsuarioAsync(UsuarioUpdate usuarioUpdate)
+        {
+            string? erro = null;
+
+            try
+            {
+                //Verificar a existencia do usuário
+                string query = UsuarioQueries.ObterUsuarioPorId();
+                var usuario = await _con.QueryFirstOrDefaultAsync<UsuarioModel>(
+                    query,
+                    new { CdUsuario = usuarioUpdate.CdUsuario }
+                );
+
+                if (usuario == null)
+                    return "Usuário NÃO existe";
+
+                //Atualizar
+                query = UsuarioQueries.AlterarUsuario();
+
+                await _con.ExecuteAsync(query, usuarioUpdate);
                 return erro;
 
             }

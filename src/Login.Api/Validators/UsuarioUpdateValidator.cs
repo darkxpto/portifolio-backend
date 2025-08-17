@@ -9,6 +9,9 @@ namespace Login.Api.Validators
         public UsuarioUpdateValidator()
         {
 
+            RuleFor(x => x.CdUsuario)
+                .NotEmpty().WithMessage("O código de usuário é obrigatório.");
+
             RuleFor(x => x.NmUsuario)
                 .NotEmpty().WithMessage("O nome é obrigatório.")
                 .Length(3, 200).WithMessage("O nome deve ter entre 3 e 200 caracteres.");
@@ -17,9 +20,6 @@ namespace Login.Api.Validators
                 .EmailAddress()
                 .WithMessage("E-mail não válido!");
 
-            RuleFor(p => p.DsSenha)
-                .Must(SenhaValida)
-                .WithMessage("Senha deve conter pelo menos 8 caracteres, um número, uma letra maiúscula, uma minúscula, e um caractere especial");
         }
 
         public bool SenhaValida(string password)

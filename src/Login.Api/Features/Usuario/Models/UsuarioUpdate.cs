@@ -2,15 +2,18 @@
 {
     public class UsuarioUpdate
     {
+        public string CdUsuario { get; set; }
         public string NmUsuario { get; set; }
         public string DsEmail { get; set; }
-        public string DsSenha { get; set; }
+        public DateTime DtAtualizacao { get; set; }
 
-        public UsuarioUpdate(string nmUsuario, string dsEmail, string dsSenha)
+        public UsuarioUpdate(string nmUsuario, string dsEmail, string cdUsuario)
         {
             NmUsuario = nmUsuario;
             DsEmail = dsEmail;
-            DsSenha = dsSenha;
+            DtAtualizacao = DateTime.Now;
+            CdUsuario = cdUsuario.ToUpper();
+            
         }
     }
 }

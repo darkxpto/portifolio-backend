@@ -23,18 +23,37 @@ namespace Login.Api.Features.Usuario
 
         [HttpPost("inserir")]
         [AllowAnonymous]
-        public async Task<ActionResult> InserirUsuarioAsync([FromBody] UsuarioCreate usuarioCreate, IValidator<UsuarioCreate> validator)
+        public async Task<ActionResult> InserirUsuarioAsync([FromBody] UsuarioCreate usuarioCreate)
         {
 
+            UsuarioModel usuarioModel = new()
+            {
+                CdUsuario = usuarioCreate.CdUsuario.ToUpper(),
+                NmUsuario = usuarioCreate.NmUsuario,
+                DsEmail = usuarioCreate.DsEmail,
+                Salt = _usuarioService.GerarSalt(32),
+                DtAtualizacao = DateTime.Now,
+                DtCadastro = DateTime.Now
+            };
 
-            UsuarioModel usuarioModel = new(usuarioCreate.CdUsuario, usuarioCreate.NmUsuario, usuarioCreate.DsEmail, usuarioCreate.DsSenha);
-
-            //Preparar informações dos usuários
-            usuarioModel.CdUsuario = usuarioModel.CdUsuario.ToUpper();
-            usuarioModel.Salt = _usuarioService.GerarSalt(32);
-            usuarioModel.DsSenha = _usuarioService.GerarHashSenha(usuarioModel.DsSenha, usuarioModel.Salt);
+            usuarioModel.DsSenha = _usuarioService.GerarHashSenha(usuarioCreate.DsSenha, usuarioModel.Salt);
 
             var erro = await _repoUsuarioRepository.InserirUsuarioAsync(usuarioModel);
+
+            if (!string.IsNullOrWhiteSpace(erro))
+            {
+                return BadRequest(new { mensagemErro = erro });
+            }
+
+            return Ok();
+        }
+
+        [HttpPut("alterar")]
+        [AllowAnonymous]
+        public async Task<ActionResult> AlterarUsuarioAsync([FromBody] UsuarioUpdate usuarioUpdate)
+        {
+
+            var erro = await _repoUsuarioRepository.AlterarUsuarioAsync(usuarioUpdate);
 
             if (!string.IsNullOrWhiteSpace(erro))
             {

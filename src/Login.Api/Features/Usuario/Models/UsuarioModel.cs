@@ -6,16 +6,10 @@
         public string NmUsuario { get; set; }
         public string DsEmail { get; set; } 
         public string DsSenha { get; set; }
-        public string Salt { get; set; } = string.Empty;
+        public string? Salt { get; set; } 
         public DateTime DtCadastro { get; set; } 
         public DateTime DtAtualizacao { get; set; }
 
-        public UsuarioModel(string cdUsuario, string nmUsuario, string dsEmail, string dsSenha)
-        {
-            CdUsuario = cdUsuario;
-            NmUsuario = nmUsuario;
-            DsEmail = dsEmail;
-            DsSenha = dsSenha;
-        }
     }
+
 }
